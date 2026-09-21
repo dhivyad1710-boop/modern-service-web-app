@@ -1,88 +1,143 @@
 import { useState } from "react";
+import "./Navbar.css";
 
 function Navbar() {
+
   const [menuOpen, setMenuOpen] = useState(false);
+
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
 
   return (
     <nav className="navbar">
 
-      <h2 className="logo">
+
+      {/* LOGO */}
+
+      <h2 
+        className="logo"
+        title="Bright Home Solution"
+      >
         ⚡ Bright Home Solution
       </h2>
 
+
+
       {/* MENU ICON */}
 
-      <div
+      <button
         className="menu-icon"
         onClick={() => setMenuOpen(!menuOpen)}
+        aria-label="Toggle navigation menu"
       >
         ☰
-      </div>
+      </button>
+
+
 
       {/* NAV LINKS */}
 
-      <div className={`nav-links ${menuOpen ? "active" : ""}`}>
+      <div 
+        className={`nav-links ${menuOpen ? "active" : ""}`}
+      >
+
 
         <a
           href="#home"
           className="nav-item"
-          onClick={() => setMenuOpen(false)}
+          onClick={closeMenu}
         >
           Home
         </a>
 
+
+        <a
+          href="#about"
+          className="nav-item"
+          onClick={closeMenu}
+        >
+          About
+        </a>
+
+
         <a
           href="#services"
           className="nav-item"
-          onClick={() => setMenuOpen(false)}
+          onClick={closeMenu}
         >
           Services
         </a>
 
-         <a
-          href="#WhyChoose"
+
+        <a
+          href="#why-choose"
           className="nav-item"
-          onClick={() => setMenuOpen(false)}
+          onClick={closeMenu}
         >
-          WhyChooseUs
+          Why Us
         </a>
+
 
         <a
           href="#projects"
           className="nav-item"
-          onClick={() => setMenuOpen(false)}
+          onClick={closeMenu}
         >
           Projects
         </a>
 
+
         <a
           href="#reviews"
           className="nav-item"
-          onClick={() => setMenuOpen(false)}
+          onClick={closeMenu}
         >
-          Review
+          Reviews
         </a>
+
+
+        <a
+          href="#faq"
+          className="nav-item"
+          onClick={closeMenu}
+        >
+          FAQ
+        </a>
+
 
         <a
           href="#contact"
           className="nav-item"
-          onClick={() => setMenuOpen(false)}
+          onClick={closeMenu}
         >
           Contact
         </a>
 
+
       </div>
 
-      {/* BUTTON */}
 
-      <a href="#contact">
+
+      {/* CTA BUTTON */}
+
+      <a 
+        href="#contact"
+        onClick={closeMenu}
+      >
+
         <button className="btn-primary nav-btn">
           Call Now
         </button>
+
       </a>
+
 
     </nav>
   );
 }
+
 
 export default Navbar;

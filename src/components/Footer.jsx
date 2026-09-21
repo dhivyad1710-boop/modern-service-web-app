@@ -36,13 +36,17 @@ function Footer() {
 
          <a href="#home">Home</a>
 
+         <a href="#about">About</a>
+
          <a href="#services">Services</a>
 
-         <a href="#WhyChoose">Why Choose Us</a>
+         <a href="#why-choose">Why Choose Us</a>
 
          <a href="#projects">Projects</a>
 
          <a href="#reviews">Reviews</a>
+
+         <a href="#faq">FAQ</a>
 
          <a href="#contact">Contact</a>
 

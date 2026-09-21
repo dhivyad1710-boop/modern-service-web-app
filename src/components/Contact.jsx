@@ -3,15 +3,25 @@ import { useEffect, useRef, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import emailjs from "@emailjs/browser";
-import { FaWhatsapp, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
+
+import {
+  FaWhatsapp,
+  FaPhoneAlt,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
+
 import { MdEmail } from "react-icons/md";
 
 function Contact() {
-
   const form = useRef();
-  const [status, setStatus] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(false);
+  const [popup, setPopup] = useState(null);
+
+  /* =========================================
+     AOS
+  ========================================= */
 
   useEffect(() => {
     AOS.init({
@@ -22,124 +32,370 @@ function Contact() {
     });
   }, []);
 
+  /* =========================================
+     CLOSE POPUP
+  ========================================= */
+
+  const closePopup = () => {
+    setPopup(null);
+  };
+
+  /* =========================================
+     SHOW POPUP
+  ========================================= */
+
+  const showPopup = (type, title, message) => {
+    setPopup({
+      type,
+      title,
+      message,
+    });
+  };
+
+  /* =========================================
+     SEND EMAIL
+  ========================================= */
+
   const sendEmail = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (cooldown) return;
+    if (cooldown || loading) {
+      return;
+    }
 
-    // 🚫 BOT/SPAM CHECK
-  if (form.current.bot_field.value) {
-    return;
-  }
+    /* =========================================
+       BOT / SPAM CHECK
+    ========================================= */
 
+    if (form.current.bot_field.value) {
+      return;
+    }
 
-  setLoading(true);
+    /* =========================================
+       GET FORM VALUES
+    ========================================= */
 
-  try {
+    const name = form.current.from_name.value.trim();
+    const email = form.current.from_email.value.trim();
+    const phone = form.current.phone.value.trim();
+    const service = form.current.service.value.trim();
+    const message = form.current.message.value.trim();
 
-    // ✅ SEND EMAIL TO ADMIN
-    await emailjs.sendForm(
-      "service_c5mncvc",
-      "template_tm0w6yj",
-      form.current,
-      "_I4FQBfqB9eFC0fa4"
-    );
+    /* =========================================
+       EMPTY FIELD VALIDATION
+    ========================================= */
 
-    // ✅ SEND AUTO REPLY TO CUSTOMER
-    await emailjs.send(
-      "service_c5mncvc",
-      "template_8c63vm7",
-      {
-        from_name: form.current.from_name.value,
-        from_email: form.current.from_email.value,
-        phone: form.current.phone.value,
-        service: form.current.service.value,
-        message: form.current.message.value,
-      },
-      "_I4FQBfqB9eFC0fa4"
-    );
+    if (!name || !email || !phone || !service || !message) {
+      showPopup(
+        "error",
+        "Incomplete Form",
+        "Please fill in all the required fields before submitting your request."
+      );
 
-    // ✅ SUCCESS
-    setStatus("success");
-    form.current.reset();
+      return;
+    }
 
-    setCooldown(true);
+    /* =========================================
+       EMAIL VALIDATION
+    ========================================= */
 
-    setTimeout(() => {
-      setCooldown(false);
-    }, 30000);
+    const emailRegex =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  } catch (error) {
+    if (!emailRegex.test(email)) {
+      showPopup(
+        "error",
+        "Invalid Email",
+        "Please enter a valid email address."
+      );
 
-    console.log("EmailJS Error:", error);
-    setStatus("error");
+      return;
+    }
 
-  } finally {
+    /* =========================================
+       INDIAN MOBILE NUMBER VALIDATION
+       10 digits and starts with 6-9
+    ========================================= */
 
-    setLoading(false);
+    const phoneRegex = /^[6-9]\d{9}$/;
 
-    setTimeout(() => {
-      setStatus("");
-    }, 3000);
+    if (!phoneRegex.test(phone)) {
+      showPopup(
+        "error",
+        "Invalid Mobile Number",
+        "Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9."
+      );
 
-  }
-};
+      return;
+    }
+
+    /* =========================================
+       START LOADING
+    ========================================= */
+
+    setLoading(true);
+
+    try {
+      /* =========================================
+         SEND REQUEST TO ADMIN
+      ========================================= */
+
+      await emailjs.sendForm(
+        "service_c5mncvc",
+        "template_tm0w6yj",
+        form.current,
+        "_I4FQBfqB9eFC0fa4"
+      );
+
+      /* =========================================
+         SEND AUTO REPLY TO CUSTOMER
+      ========================================= */
+
+      await emailjs.send(
+        "service_c5mncvc",
+        "template_8c63vm7",
+        {
+          from_name: name,
+          from_email: email,
+          phone: phone,
+          service: service,
+          message: message,
+        },
+        "_I4FQBfqB9eFC0fa4"
+      );
+
+      /* =========================================
+         SUCCESS
+      ========================================= */
+
+      showPopup(
+        "success",
+        "Message Sent Successfully!",
+        "Thank you for contacting Bright Home Solution. Your service request has been received. We will get back to you soon."
+      );
+
+      /* Reset form */
+
+      form.current.reset();
+
+      /* =========================================
+         COOLDOWN
+      ========================================= */
+
+      setCooldown(true);
+
+      setTimeout(() => {
+        setCooldown(false);
+      }, 30000);
+
+    } catch (error) {
+
+      /* =========================================
+         EMAILJS ERROR
+      ========================================= */
+
+      console.error("========== EMAILJS ERROR ==========");
+      console.error("Status:", error?.status);
+      console.error("Text:", error?.text);
+      console.error("Full Error:", error);
+      console.error("===================================");
+
+      showPopup(
+        "error",
+        "Message Not Sent",
+        "We couldn't send your request right now. Please try again or contact us directly by phone or WhatsApp."
+      );
+
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* =========================================
+     RETURN
+  ========================================= */
 
   return (
-    <section id="contact" className="contact section">
+    <section
+      className="contact-section"
+      id="contact"
+    >
 
-      {/* ===== POPUP ===== */}
-      {status && (
-        <div className={`popup ${status}`}>
-          {status === "success" ? (
-            <h3>⚡ Message Sent Successfully!</h3>
-          ) : (
-            <h3>❌ Failed to Send Message</h3>
-          )}
+      {/* =====================================
+          CUSTOM POPUP
+      ===================================== */}
+
+      {popup && (
+        <div
+          className="contact-popup-overlay"
+          onClick={closePopup}
+        >
+
+          <div
+            className={`contact-popup ${
+              popup.type === "success"
+                ? "contact-popup-success"
+                : "contact-popup-error"
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            {/* CLOSE BUTTON */}
+
+            <button
+              type="button"
+              className="contact-popup-close"
+              onClick={closePopup}
+              aria-label="Close popup"
+            >
+              ✕
+            </button>
+
+
+            {/* ICON */}
+
+            <div className="contact-popup-icon">
+
+              {popup.type === "success" ? (
+                "✓"
+              ) : (
+                "!"
+              )}
+
+            </div>
+
+
+            {/* TITLE */}
+
+            <h3>
+              {popup.title}
+            </h3>
+
+
+            {/* MESSAGE */}
+
+            <p>
+              {popup.message}
+            </p>
+
+
+            {/* OK BUTTON */}
+
+            <button
+              type="button"
+              className="contact-popup-button"
+              onClick={closePopup}
+            >
+              OK
+            </button>
+
+          </div>
+
         </div>
       )}
 
+
+      {/* =====================================
+          CONTACT CONTAINER
+      ===================================== */}
+
       <div className="contact-container">
 
-        {/* ===== LEFT SIDE ===== */}
-        <div className="contact-left" data-aos="fade-right">
 
-          <p className="contact-tag">GET IN TOUCH</p>
+        {/* ===================================
+            LEFT SIDE
+        =================================== */}
+
+        <div
+          className="contact-left"
+          data-aos="fade-right"
+        >
+
+          <p className="contact-tag">
+            GET IN TOUCH
+          </p>
+
 
           <h2 className="contact-title">
-            Need Reliable <span>Electrical Service?</span>
+            Need Reliable{" "}
+            <span>
+              Electrical Service?
+            </span>
           </h2>
 
+
           <p className="contact-subtitle">
-            Professional electrical solutions designed for safety,
-            performance, and long-term reliability for homes,
-            offices, and commercial spaces.
+            Professional electrical solutions designed
+            for safety, performance, and long-term
+            reliability for homes, offices, and
+            commercial spaces.
           </p>
+
+
+          {/* CONTACT INFO */}
 
           <div className="contact-info">
 
-            <div className="info-card" data-aos="fade-up" data-aos-delay="100">
+
+            {/* PHONE */}
+
+            <div
+              className="info-card"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+
               <h4>
-                <FaPhoneAlt className="icon-yellow" /> Call Us
+                <FaPhoneAlt className="icon-yellow" />
+                Call Us
               </h4>
-              <a href="tel:+918667345003" className="contact-link-btn">
+
+              <a
+                href="tel:+918667345003"
+                className="contact-link-btn"
+              >
                 📞 Call Now
               </a>
+
             </div>
 
-            <div className="info-card" data-aos="fade-up" data-aos-delay="200">
+
+            {/* EMAIL */}
+
+            <div
+              className="info-card"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+
               <h4>
-                <MdEmail className="icon-email" /> Email
+                <MdEmail className="icon-email" />
+                Email
               </h4>
-              <a href="mailto:brighthomefuture@gmail.com" className="contact-link-btn">
+
+              <a
+                href="mailto:brighthomefuture@gmail.com"
+                className="contact-link-btn"
+              >
                 📧 Send Email
               </a>
+
             </div>
 
-            <div className="info-card" data-aos="fade-up" data-aos-delay="300">
+
+            {/* LOCATION */}
+
+            <div
+              className="info-card"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+
               <h4>
-                <FaMapMarkerAlt className="icon-yellow" /> Location
+                <FaMapMarkerAlt className="icon-yellow" />
+                Location
               </h4>
+
               <a
                 href="https://www.google.com/maps/place/Bright+home+solutions"
                 target="_blank"
@@ -148,50 +404,175 @@ function Contact() {
               >
                 📌 Locate Us on Map
               </a>
+
             </div>
 
           </div>
+
         </div>
 
-        {/* ===== RIGHT SIDE ===== */}
-        <div id="service-form" className="contact-right" data-aos="fade-left" >
 
-          <form ref={form} onSubmit={sendEmail} className="contact-form">
+        {/* ===================================
+            RIGHT SIDE
+        =================================== */}
 
-            <input type="text" name="bot_field" style={{ display: "none" }} />
+        <div
+          id="service-form"
+          className="contact-right"
+          data-aos="fade-left"
+        >
+
+          <form
+            ref={form}
+            onSubmit={sendEmail}
+            className="contact-form"
+            noValidate
+          >
+
+            {/* =================================
+                HIDDEN BOT FIELD
+            ================================= */}
+
+            <input
+              type="text"
+              name="bot_field"
+              className="bot-field"
+              tabIndex="-1"
+              autoComplete="off"
+            />
+
+
+            {/* =================================
+                NAME
+            ================================= */}
 
             <div className="input-group">
-              <input type="text" name="from_name" required />
-              <label>Full Name</label>
+
+              <label htmlFor="from_name">
+                Full Name
+              </label>
+
+              <input
+                id="from_name"
+                type="text"
+                name="from_name"
+                placeholder="Enter your full name"
+                autoComplete="name"
+                required
+              />
+
             </div>
 
-            {/* ⚡ FIXED: EMAIL FIELD ADDED */}
-            <div className="input-group">
-              <input type="email" name="from_email" required />
-              <label>Email Address</label>
-            </div>
+
+            {/* =================================
+                EMAIL
+            ================================= */}
 
             <div className="input-group">
-              <input type="tel" name="phone" required />
-              <label>Phone Number</label>
+
+              <label htmlFor="from_email">
+                Email Address
+              </label>
+
+              <input
+                id="from_email"
+                type="email"
+                name="from_email"
+                placeholder="Enter your email address"
+                autoComplete="email"
+                required
+              />
+
             </div>
 
-            <div className="input-group">
-              <input type="text" name="service" required />
-              <label>Service Needed</label>
-            </div>
+
+            {/* =================================
+                PHONE
+            ================================= */}
 
             <div className="input-group">
-              <textarea name="message" rows="5" required></textarea>
-              <label>Message</label>
+
+              <label htmlFor="phone">
+                Phone Number
+              </label>
+
+              <input
+                id="phone"
+                type="tel"
+                name="phone"
+                placeholder="Enter 10-digit mobile number"
+                inputMode="numeric"
+                autoComplete="tel"
+                maxLength="10"
+                required
+
+                onInput={(e) => {
+                  e.target.value =
+                    e.target.value.replace(/\D/g, "");
+                }}
+              />
+
             </div>
+
+
+            {/* =================================
+                SERVICE
+            ================================= */}
+
+            <div className="input-group">
+
+              <label htmlFor="service">
+                Service Needed
+              </label>
+
+              <input
+                id="service"
+                type="text"
+                name="service"
+                placeholder="Example: Home Wiring"
+                required
+              />
+
+            </div>
+
+
+            {/* =================================
+                MESSAGE
+            ================================= */}
+
+            <div className="input-group">
+
+              <label htmlFor="message">
+                Message
+              </label>
+
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                placeholder="Tell us about your electrical requirement..."
+                required
+              />
+
+            </div>
+
+
+            {/* =================================
+                SUBMIT BUTTON
+            ================================= */}
 
             <button
               type="submit"
               className="contact-btn"
-              disabled={loading}
+              disabled={loading || cooldown}
             >
-              {loading ? "⏳ Sending..." : "⚡ Request Service"}
+
+              {loading
+                ? "⏳ Sending..."
+                : cooldown
+                ? "✓ Request Received"
+                : "⚡ Request Service"}
+
             </button>
 
           </form>
@@ -200,14 +581,21 @@ function Contact() {
 
       </div>
 
-      {/* ===== FLOATING WHATSAPP BUTTON ===== */}
+
+      {/* =====================================
+          FLOATING WHATSAPP
+      ===================================== */}
+
       <a
         href="https://wa.me/918667345003?text=Hello%20Bright%20Home%20Solution%20👋%0A%0AI%20am%20interested%20in%20your%20electrical%20services.%0A%0AName:%0ALocation:%0AService%20Needed:"
         className="whatsapp-float"
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="Contact Bright Home Solution on WhatsApp"
       >
+
         <FaWhatsapp />
+
       </a>
 
     </section>

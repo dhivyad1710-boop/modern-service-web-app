@@ -145,83 +145,126 @@
 
 /* ===== INPUT GROUP ===== */
 
+/* =========================================
+   INPUT GROUP
+========================================= */
+
 .input-group {
   position: relative;
-
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
+
+/* =========================================
+   LABEL
+========================================= */
+
+.input-group label {
+  display: block;
+
+  position: relative;
+
+  left: auto;
+  top: auto;
+
+  margin-bottom: 8px;
+
+  color: #ffd000;
+
+  font-size: 0.88rem;
+  font-weight: 600;
+
+  pointer-events: none;
+
+  background: transparent;
+}
+
+/* =========================================
+   INPUT + TEXTAREA
+========================================= */
 
 .input-group input,
 .input-group textarea {
   width: 100%;
 
-  padding: 18px;
+  box-sizing: border-box;
 
-  background: rgba(255,255,255,0.03);
+  padding: 15px 16px;
 
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.035);
 
-  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
 
-  color: white;
+  border-radius: 12px;
+
+  color: #fff;
 
   outline: none;
 
-  font-size: 1rem;
+  font-family: inherit;
 
-  transition: 0.35s ease;
+  font-size: 0.95rem;
 
-  box-sizing: border-box;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
 }
 
-.input-group textarea {
-  resize: none;
+/* =========================================
+   PLACEHOLDER
+========================================= */
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: #777;
+
+  opacity: 1;
 }
 
-/* ===== INPUT FOCUS ===== */
+/* =========================================
+   FOCUS
+========================================= */
 
 .input-group input:focus,
 .input-group textarea:focus {
-  border-color: rgba(255, 208, 0, 0.55);
+  border-color: #ffd000;
+
+  background: rgba(255, 208, 0, 0.025);
 
   box-shadow:
-    0 0 18px rgba(255, 208, 0, 0.12);
+    0 0 0 3px rgba(255, 208, 0, 0.08),
+    0 0 20px rgba(255, 208, 0, 0.08);
 }
 
-/* ===== LABEL ===== */
+/* =========================================
+   VALID FIELD
+========================================= */
 
-.input-group label {
-  position: absolute;
-
-  left: 18px;
-  top: 18px;
-
-  color: #888;
-
-  pointer-events: none;
-
-  transition: 0.3s ease;
-
-  background: transparent;
+.input-group input:not(:placeholder-shown):valid,
+.input-group textarea:not(:placeholder-shown):valid {
+  border-color: rgba(255, 208, 0, 0.25);
 }
 
-/* ===== FLOATING LABEL ===== */
+/* =========================================
+   INVALID FIELD
+========================================= */
 
-.input-group input:focus + label,
-.input-group input:valid + label,
-.input-group textarea:focus + label,
-.input-group textarea:valid + label {
-  top: -10px;
+.input-group input:focus:invalid,
+.input-group textarea:focus:invalid {
+  border-color: #ff5252;
 
-  left: 14px;
+  box-shadow:
+    0 0 0 3px rgba(255, 82, 82, 0.08);
+}
 
-  font-size: 0.78rem;
+/* =========================================
+   TEXTAREA
+========================================= */
 
-  color: #ffd000;
+.input-group textarea {
+  min-height: 130px;
 
-  background: #111;
-
-  padding: 0 8px;
+  resize: vertical;
 }
 
 /* ========================================= */
@@ -292,66 +335,318 @@
   }
 }
 
-.popup {
+/* =========================================
+   CUSTOM POPUP OVERLAY
+========================================= */
+
+.custom-popup-overlay {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 15px 25px;
-  border-radius: 12px;
-  font-weight: 600;
-  color: white;
-  z-index: 9999;
-  animation: slideIn 0.4s ease;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+  inset: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.72);
+
+  backdrop-filter: blur(8px);
+
+  z-index: 999999;
+
+  animation: popupFadeIn 0.25s ease;
 }
 
-.popup.success {
-  background: linear-gradient(135deg, #ffcc00, #ffb300);
-  box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+/* =========================================
+   POPUP
+========================================= */
+
+.custom-popup {
+  position: relative;
+
+  width: min(420px, 100%);
+
+  padding: 34px 28px 28px;
+
+  text-align: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      #151515,
+      #080808
+    );
+
+  border: 1px solid rgba(255, 208, 0, 0.35);
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 0 30px rgba(255, 208, 0, 0.12),
+    0 25px 80px rgba(0, 0, 0, 0.7);
+
+  animation: popupScale 0.3s ease;
 }
 
-.popup.error {
-  background: linear-gradient(135deg, #ff1744, #d50000);
+/* =========================================
+   POPUP ICON
+========================================= */
+
+.popup-icon {
+  width: 64px;
+  height: 64px;
+
+  margin: 0 auto 18px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 208, 0, 0.10);
+
+  border: 1px solid rgba(255, 208, 0, 0.3);
+
+  color: #ffd000;
+
+  font-size: 28px;
+
+  box-shadow:
+    0 0 25px rgba(255, 208, 0, 0.15);
 }
 
-@keyframes slideIn {
+/* =========================================
+   SUCCESS
+========================================= */
+
+.popup-success .popup-icon {
+  color: #ffd000;
+
+  background: rgba(255, 208, 0, 0.12);
+}
+
+/* =========================================
+   ERROR
+========================================= */
+
+.popup-error .popup-icon {
+  color: #ffd000;
+
+  background: rgba(255, 208, 0, 0.08);
+}
+
+/* =========================================
+   POPUP TITLE
+========================================= */
+
+.custom-popup h3 {
+  margin: 0 0 12px;
+
+  color: #fff;
+
+  font-size: 1.35rem;
+
+  font-weight: 700;
+}
+
+/* =========================================
+   POPUP MESSAGE
+========================================= */
+
+.custom-popup p {
+  margin: 0 auto 24px;
+
+  max-width: 330px;
+
+  color: #bdbdbd;
+
+  font-size: 0.95rem;
+
+  line-height: 1.6;
+}
+
+/* =========================================
+   CLOSE BUTTON
+========================================= */
+
+.popup-close {
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 208, 0, 0.15);
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #777;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.popup-close:hover {
+  color: #ffd000;
+
+  border-color: #ffd000;
+
+  transform: rotate(90deg);
+}
+
+/* =========================================
+   OK BUTTON
+========================================= */
+
+.popup-ok {
+  min-width: 120px;
+
+  padding: 11px 24px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #ffd000;
+
+  color: #050505;
+
+  font-weight: 700;
+
+  font-size: 0.95rem;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.popup-ok:hover {
+  transform: translateY(-2px);
+
+  background: #ffdf3d;
+
+  box-shadow:
+    0 0 20px rgba(255, 208, 0, 0.35);
+}
+
+/* =========================================
+   POPUP ANIMATIONS
+========================================= */
+
+@keyframes popupFadeIn {
   from {
-    transform: translateX(100px);
     opacity: 0;
   }
+
   to {
-    transform: translateX(0);
     opacity: 1;
   }
 }
 
+@keyframes popupScale {
+  from {
+    opacity: 0;
+
+    transform: scale(0.88) translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* =========================================
+   MOBILE POPUP
+========================================= */
+
+@media (max-width: 600px) {
+
+  .custom-popup-overlay {
+    padding: 18px;
+  }
+
+  .custom-popup {
+    padding: 32px 20px 24px;
+
+    border-radius: 18px;
+  }
+
+  .popup-icon {
+    width: 56px;
+    height: 56px;
+
+    font-size: 24px;
+  }
+
+  .custom-popup h3 {
+    font-size: 1.15rem;
+  }
+
+  .custom-popup p {
+    font-size: 0.88rem;
+  }
+
+}
+
 .whatsapp-float {
   position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 60px;
-  height: 60px;
-  background: #25D366;
-  color: white;
+
+  right: 18px;
+  bottom: 18px;
+
+  width: 52px;
+  height: 52px;
+
   border-radius: 50%;
+
+  background: #ffd000;
+  color: #000;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
+
   text-decoration: none;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-  z-index: 9999;
-  transition: all 0.3s ease;
+
+  font-size: 24px;
+
+  z-index: 99999;
+
+  box-shadow:
+    0 0 18px rgba(255,208,0,.45);
+
+  transition: .3s ease;
 }
 
-.whatsapp-float svg {
-  width: 28px;
-  height: 28px;
+.whatsapp-float:hover{
+  transform: scale(1.08);
+
+  box-shadow:
+    0 0 28px rgba(255,208,0,.65);
 }
 
-.whatsapp-float:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 20px rgba(37, 211, 102, 0.7);
+.whatsapp-float svg{
+  width:24px;
+  height:24px;
 }
 
 .map-container {
@@ -409,4 +704,377 @@
   margin-right: 8px;
   font-size: 18px;
   vertical-align: middle;
+}
+
+/* =========================================
+   INPUT FIELDS
+========================================= */
+
+.input-group {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.input-group label {
+  display: block;
+  position: static;
+
+  margin-bottom: 8px;
+
+  color: #ffd000;
+
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 15px 16px;
+
+  background: #0d0d0d;
+
+  border: 1px solid rgba(255, 255, 255, 0.10);
+
+  border-radius: 12px;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 0.95rem;
+
+  outline: none;
+
+  transition: 0.3s ease;
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: #777;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #ffd000;
+
+  box-shadow:
+    0 0 0 3px rgba(255, 208, 0, 0.08),
+    0 0 20px rgba(255, 208, 0, 0.10);
+}
+
+.input-group textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+/* =========================================
+   HIDDEN BOT FIELD
+========================================= */
+
+.bot-field {
+  display: none !important;
+}
+
+
+/* =========================================
+   CUSTOM POPUP OVERLAY
+========================================= */
+
+.contact-popup-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background: rgba(0, 0, 0, 0.78);
+
+  backdrop-filter: blur(8px);
+
+  z-index: 999999;
+}
+
+
+/* =========================================
+   POPUP BOX
+========================================= */
+
+.contact-popup {
+  position: relative;
+
+  width: min(420px, 92vw);
+
+  box-sizing: border-box;
+
+  padding: 38px 28px 28px;
+
+  text-align: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      #171717,
+      #050505
+    );
+
+  border: 1px solid rgba(255, 208, 0, 0.45);
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 0 20px rgba(255, 208, 0, 0.12),
+    0 0 60px rgba(255, 208, 0, 0.06),
+    0 25px 80px rgba(0, 0, 0, 0.8);
+
+  animation: contactPopupIn 0.3s ease;
+}
+
+
+/* =========================================
+   YELLOW TOP LINE
+========================================= */
+
+.contact-popup::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 12%;
+
+  width: 76%;
+  height: 3px;
+
+  background: #ffd000;
+
+  border-radius: 0 0 10px 10px;
+
+  box-shadow:
+    0 0 15px rgba(255, 208, 0, 0.7);
+}
+
+
+/* =========================================
+   POPUP ICON
+========================================= */
+
+.contact-popup-icon {
+  width: 64px;
+  height: 64px;
+
+  margin: 0 auto 18px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 208, 0, 0.08);
+
+  border: 1px solid rgba(255, 208, 0, 0.35);
+
+  color: #ffd000;
+
+  font-size: 28px;
+
+  box-shadow:
+    0 0 25px rgba(255, 208, 0, 0.15);
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.contact-popup h3 {
+  margin: 0 0 12px;
+
+  color: #ffffff;
+
+  font-size: 1.35rem;
+
+  font-weight: 700;
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.contact-popup p {
+  margin: 0 auto 25px;
+
+  max-width: 340px;
+
+  color: #bdbdbd;
+
+  font-size: 0.95rem;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   CLOSE
+========================================= */
+
+.contact-popup-close {
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 208, 0, 0.18);
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #777;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.contact-popup-close:hover {
+  color: #ffd000;
+
+  border-color: #ffd000;
+
+  transform: rotate(90deg);
+}
+
+
+/* =========================================
+   OK BUTTON
+========================================= */
+
+.contact-popup-button {
+  min-width: 120px;
+
+  padding: 11px 28px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #ffd000;
+
+  color: #050505;
+
+  font-size: 0.95rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.contact-popup-button:hover {
+  background: #ffe04a;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 20px rgba(255, 208, 0, 0.45);
+}
+
+
+/* =========================================
+   SUCCESS
+========================================= */
+
+.contact-popup-success {
+  border-color: rgba(255, 208, 0, 0.55);
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+.contact-popup-error {
+  border-color: rgba(255, 208, 0, 0.40);
+}
+
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes contactPopupIn {
+  from {
+    opacity: 0;
+
+    transform:
+      scale(0.85)
+      translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      scale(1)
+      translateY(0);
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .contact-popup {
+    width: 92vw;
+
+    padding:
+      35px
+      20px
+      24px;
+
+    border-radius: 18px;
+  }
+
+  .contact-popup-icon {
+    width: 56px;
+    height: 56px;
+
+    font-size: 24px;
+  }
+
+  .contact-popup h3 {
+    font-size: 1.15rem;
+  }
+
+  .contact-popup p {
+    font-size: 0.88rem;
+  }
+
 }

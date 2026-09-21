@@ -1,0 +1,173 @@
+/* ==========================================
+   WHY CHOOSE US
+========================================== */
+
+.why-section {
+  background: #000;
+  padding: 90px 10%;
+}
+
+.why-title {
+  text-align: center;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: #ffd000;
+  margin-bottom: 60px;
+  text-shadow: 0 0 20px rgba(255, 208, 0, 0.35);
+}
+
+/* ==========================================
+   GRID
+========================================== */
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+/* ==========================================
+   CARD
+========================================== */
+
+.feature-card {
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 22px;
+
+  padding: 36px 28px;
+
+  text-align: center;
+
+  transition:
+    transform .35s ease,
+    box-shadow .35s ease,
+    border-color .35s ease;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+
+  border-color: rgba(255, 208, 0, 0.35);
+
+  box-shadow:
+    0 0 20px rgba(255,208,0,.25),
+    0 12px 35px rgba(0,0,0,.35);
+}
+
+/* ==========================================
+   ICON
+========================================== */
+
+.card-icon {
+  width: 70px;
+  height: 70px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 22px;
+
+  border-radius: 50%;
+
+  background: rgba(255,208,0,.08);
+
+  color: #ffd000;
+
+  font-size: 1.8rem;
+
+  transition: .35s ease;
+}
+
+.feature-card:hover .card-icon {
+  transform: scale(1.08);
+
+  background: rgba(255,208,0,.12);
+
+  box-shadow: 0 0 18px rgba(255,208,0,.25);
+}
+
+/* ==========================================
+   CONTENT
+========================================== */
+
+.feature-card h3 {
+  color: #fff;
+  font-size: 1.45rem;
+  line-height: 1.35;
+  margin-bottom: 14px;
+}
+
+.feature-card p {
+  color: #cfcfcf;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width:1024px){
+
+  .features-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width:600px){
+
+  .why-section{
+    padding:70px 7%;
+  }
+
+  .why-title{
+    margin-bottom:40px;
+  }
+
+  .features-grid{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  .feature-card{
+
+    padding:24px 20px;
+
+    border-radius:18px;
+  }
+
+  .card-icon{
+
+    width:58px;
+    height:58px;
+
+    margin-bottom:16px;
+
+    font-size:1.4rem;
+  }
+
+  .feature-card h3{
+
+    font-size:1.25rem;
+
+    margin-bottom:10px;
+  }
+
+  .feature-card p{
+
+    font-size:.96rem;
+
+    line-height:1.6;
+  }
+
+}
