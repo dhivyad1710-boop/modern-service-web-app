@@ -17,12 +17,18 @@ function Navbar() {
 
       {/* LOGO */}
 
-      <h2 
+      <a
+        href="#home"
         className="logo"
         title="Bright Home Solution"
+        aria-label="Bright Home Solution - Home"
       >
-        ⚡ Bright Home Solution
-      </h2>
+      <img
+        src="/bhs-wordmark.svg"
+        alt="Bright Home Solution logo"
+        className="logo-image"
+      />
+      </a>
 
 
 

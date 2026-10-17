@@ -397,10 +397,11 @@ function Contact() {
               </h4>
 
               <a
-                href="https://www.google.com/maps/place/Bright+home+solutions"
+                href="https://maps.app.goo.gl/cHbGqYw1DWq54n2r9?g_st=aw"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="contact-link-btn"
+                aria-label="Find Bright Home Solution on Google Maps"
               >
                 📌 Locate Us on Map
               </a>
